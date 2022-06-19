@@ -40,6 +40,7 @@ int faiss_index_cpu_to_gpu_with_options(
         const FaissGpuClonerOptions* options,
         FaissGpuIndex** p_out);
 
+
 /// converts any CPU index that can be converted to GPU
 int faiss_index_cpu_to_gpu_multiple(
         FaissGpuResourcesProvider* const* providers_vec,
@@ -47,6 +48,15 @@ int faiss_index_cpu_to_gpu_multiple(
         size_t devices_size,
         const FaissIndex* index,
         FaissGpuIndex** p_out);
+
+int faiss_index_cpu_to_gpu_multiple_sharding(
+        FaissGpuResourcesProvider* const* providers_vec,
+        size_t providers_vec_size,
+        const int* devices,
+        size_t devices_size,
+        const FaissIndex* index,
+        FaissGpuIndex** p_out
+);
 
 /// converts any CPU index that can be converted to GPU
 int faiss_index_cpu_to_gpu_multiple_with_options(
