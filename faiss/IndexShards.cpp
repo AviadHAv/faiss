@@ -229,16 +229,16 @@ void IndexShardsTemplate<IndexT>::add_with_ids(
             "It makes no sense to pass in ids and "
             "request them to be shifted");
 
-    if (successive_ids) {
-        FAISS_THROW_IF_NOT_MSG(
-                !xids,
-                "It makes no sense to pass in ids and "
-                "request them to be shifted");
-        FAISS_THROW_IF_NOT_MSG(
-                this->ntotal == 0,
-                "when adding to IndexShards with sucessive_ids, "
-                "only add() in a single pass is supported");
-    }
+//    if (successive_ids) {
+//        FAISS_THROW_IF_NOT_MSG(
+//                !xids,
+//                "It makes no sense to pass in ids and "
+//                "request them to be shifted");
+//        FAISS_THROW_IF_NOT_MSG(
+//                this->ntotal == 0,
+//                "when adding to IndexShards with sucessive_ids, "
+//                "only add() in a single pass is supported");
+//    }
 
     idx_t nshard = this->count();
     const idx_t* ids = xids;
