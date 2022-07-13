@@ -34,7 +34,7 @@ struct IndexShardsTemplate : public ThreadedIndex<IndexT> {
      */
     explicit IndexShardsTemplate(
             bool threaded = false,
-            bool successive_ids = true);
+            bool successive_ids = false);
 
     /**
      * @param threaded     do we use one thread per sub_index or do
@@ -46,14 +46,14 @@ struct IndexShardsTemplate : public ThreadedIndex<IndexT> {
     explicit IndexShardsTemplate(
             idx_t d,
             bool threaded = false,
-            bool successive_ids = true);
+            bool successive_ids = false);
 
     /// int version due to the implicit bool conversion ambiguity of int as
     /// dimension
     explicit IndexShardsTemplate(
             int d,
             bool threaded = false,
-            bool successive_ids = true);
+            bool successive_ids = false);
 
     /// Alias for addIndex()
     void add_shard(IndexT* index) {
@@ -91,7 +91,7 @@ struct IndexShardsTemplate : public ThreadedIndex<IndexT> {
 
     void train(idx_t n, const component_t* x) override;
 
-    bool successive_ids;
+    bool successive_ids{false};
 
     /// Synchronize the top-level index (IndexShards) with data in the
     /// sub-indices

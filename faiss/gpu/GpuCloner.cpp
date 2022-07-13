@@ -11,6 +11,7 @@
 
 #include <faiss/gpu/StandardGpuResources.h>
 
+#include <faiss/index_factory.h>
 #include <faiss/IndexFlat.h>
 #include <faiss/IndexIVF.h>
 #include <faiss/IndexIVFFlat.h>
@@ -269,9 +270,9 @@ Index* ToGpuClonerMultiple::clone_Index_to_shards(const Index* index) {
 
     auto index_ivfpq = dynamic_cast<const faiss::IndexIVFPQ*>(index);
     auto index_ivfflat = dynamic_cast<const faiss::IndexIVFFlat*>(index);
-    auto index_ivfsq =
-            dynamic_cast<const faiss::IndexIVFScalarQuantizer*>(index);
+    auto index_ivfsq = dynamic_cast<const faiss::IndexIVFScalarQuantizer*>(index);
     auto index_flat = dynamic_cast<const faiss::IndexFlat*>(index);
+
     FAISS_THROW_IF_NOT_MSG(
             index_ivfpq || index_ivfflat || index_flat || index_ivfsq,
             "IndexShards implemented only for "
@@ -323,7 +324,15 @@ Index* ToGpuClonerMultiple::clone_Index_to_shards(const Index* index) {
             idx2.sq = index_ivfsq->sq;
             copy_ivf_shard(index_ivfsq, &idx2, n, i);
             shards[i] = sub_cloners[i].clone_Index(&idx2);
-        } else if (index_flat) {
+        }
+        else if (index_flat) {
+             /*
+              it looks weird that we create here idmap.. but it suite to the our senrio.. working only with idmap.. and no case here for this index
+              because idmap is a wrap for flat in our case it always catch this case
+             */
+             IndexIDMap* idx2 = new IndexIDMap(index_factory(index->d, "Flat", index->metric_type));
+             shards[i] = sub_cloners[i].clone_Index(idx2);
+            /*
             faiss::IndexFlat idx2(index->d, index->metric_type);
             shards[i] = sub_cloners[i].clone_Index(&idx2);
             if (index->ntotal > 0) {
@@ -331,12 +340,13 @@ Index* ToGpuClonerMultiple::clone_Index_to_shards(const Index* index) {
                 long i1 = index->ntotal * (i + 1) / n;
                 shards[i]->add(i1 - i0, index_flat->get_xb() + i0 * index->d);
             }
+            */
         }
     }
 
-    bool successive_ids = index_flat != nullptr;
-    faiss::IndexShards* res =
-            new faiss::IndexShards(index->d, true, successive_ids);
+//    bool successive_ids = index_flat != nullptr;
+    bool successive_ids = false;
+    faiss::IndexShards* res = new faiss::IndexShards(index->d, true, successive_ids);
 
     for (int i = 0; i < n; i++) {
         res->add_shard(shards[i]);
