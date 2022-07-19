@@ -7,6 +7,7 @@ target_sources(faiss_c PRIVATE
   DeviceUtils_c.cpp
   GpuAutoTune_c.cpp
   GpuClonerOptions_c.cpp
+  GpuIndexIvf_c.cpp
   GpuIndex_c.cpp
   GpuResources_c.cpp
   StandardGpuResources_c.cpp

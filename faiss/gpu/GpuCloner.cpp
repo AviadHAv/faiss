@@ -4,6 +4,7 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
+#include <iostream>
 
 #include <faiss/gpu/GpuCloner.h>
 #include <faiss/impl/FaissAssert.h>
@@ -152,6 +153,8 @@ Index* ToGpuCloner::clone_Index(const Index* index) {
 
         GpuIndexIVFFlat* res = new GpuIndexIVFFlat(
                 provider, ifl->d, ifl->nlist, ifl->metric_type, config);
+        res->nprobe = ifl->nprobe;
+        std::cout << "gpu probes ==" << res->getNumProbes() << std::endl;
         if (reserveVecs > 0 && ifl->ntotal == 0) {
             res->reserveMemory(reserveVecs);
         }
@@ -307,6 +310,7 @@ Index* ToGpuClonerMultiple::clone_Index_to_shards(const Index* index) {
                     index_ivfflat->nlist,
                     index_ivfflat->metric_type);
             idx2.nprobe = index_ivfflat->nprobe;
+            std::cout << "nprobe cloner = " << idx2.nprobe << std::endl;
             idx2.is_trained = index->is_trained;
             copy_ivf_shard(index_ivfflat, &idx2, n, i);
             shards[i] = sub_cloners[i].clone_Index(&idx2);
