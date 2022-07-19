@@ -25,7 +25,7 @@ GpuIndexIVF::GpuIndexIVF(
         GpuIndexIVFConfig config)
         : GpuIndex(provider->getResources(), dims, metric, metricArg, config),
           nlist(nlistIn),
-          nprobe(1),
+          nprobe(100),
           quantizer(nullptr),
           ivfConfig_(config) {
     init_();
