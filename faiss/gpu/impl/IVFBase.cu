@@ -5,6 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#include <iostream>
+
 #include <faiss/gpu/GpuResources.h>
 #include <faiss/gpu/impl/RemapIndices.h>
 #include <faiss/gpu/utils/DeviceUtils.h>
@@ -578,7 +580,10 @@ int IVFBase::addVectors(
                 indices->data.resize(
                         indices->data.size() + numVecsToAdd * indexSize,
                         stream);
-                FAISS_ASSERT(indices->numVecs == oldNumVecs);
+//                 std::cout << "indices->numVecs " << indices->numVecs << std::endl;
+//                 std::cout << "oldNumVecs "       << oldNumVecs << std::endl;
+
+//                 FAISS_ASSERT(indices->numVecs == oldNumVecs);
                 indices->numVecs = newNumVecs;
 
             } else if (indicesOptions_ == INDICES_CPU) {
